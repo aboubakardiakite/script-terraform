@@ -22,7 +22,7 @@ jobs:
           terraform_version: "1.7.4"
 
       - name: Déployer avec Terraform
-        working-directory: terraform
+        working-directory: .
         run: |
           terraform init
           terraform apply -auto-approve
