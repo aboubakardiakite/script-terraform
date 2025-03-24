@@ -1,4 +1,4 @@
-name: 🚀 Deploy Kubernetes via Terraform (Destroy puis Apply)
+name: 🚀 Deploy Kubernetes via Terraform
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
     runs-on: self-hosted
 
     env:
-      NODE_TLS_REJECT_UNAUTHORIZED: "0"
+      NODE_TLS_REJECT_UNAUTHORIZED: "0"  # Ajoute ceci !
 
     steps:
       - name: Checkout du dépôt
@@ -21,14 +21,8 @@ jobs:
         with:
           terraform_version: "1.7.4"
 
-      - name: Terraform Init
+      - name: Déployer avec Terraform
         working-directory: .
-        run: terraform init
-
-      - name: Terraform Destroy
-        working-directory: .
-        run: terraform destroy -auto-approve
-
-      - name: Terraform Apply 
-        working-directory: .
-        run: terraform apply -auto-approve
+        run: |
+          terraform init
+          terraform apply -auto-approve

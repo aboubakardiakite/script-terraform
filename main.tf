@@ -11,9 +11,37 @@ provider "kubernetes" {
   config_path = "~/.kube/config"
 }
 
+locals {
+  timestamp = timestamp()  # Génère un timestamp unique à chaque apply
+}
+
 # React Frontend
 resource "kubernetes_manifest" "react_deployment" {
-  manifest = yamldecode(file("${path.module}/k8s/react-deployment.yml"))
+  manifest = {
+    apiVersion = "apps/v1"
+    kind       = "Deployment"
+    metadata = {
+      name      = "react-app"
+      namespace = "default"
+      annotations = {
+        "timestamp" = local.timestamp  # Force le redéploiement
+      }
+    }
+    spec = {
+      template = {
+        spec = {
+          containers = [
+            {
+              image = "your-image:latest"
+              imagePullPolicy = "Always"  # Force à toujours tirer l'image
+              // ... reste de la configuration ...
+            }
+          ]
+        }
+      }
+    }
+    // ... reste de la configuration ...
+  }
 }
 
 resource "kubernetes_manifest" "react_service" {
@@ -22,7 +50,30 @@ resource "kubernetes_manifest" "react_service" {
 
 # NestJS Backend API
 resource "kubernetes_manifest" "workout-planner" {
-  manifest = yamldecode(file("${path.module}/k8s/workout-planner.yml"))
+  manifest = {
+    apiVersion = "apps/v1"
+    kind       = "Deployment"
+    metadata = {
+      name      = "workout-planner"
+      namespace = "default"
+      annotations = {
+        "timestamp" = local.timestamp  # Force le redéploiement
+      }
+    }
+    spec = {
+      template = {
+        spec = {
+          containers = [
+            {
+              image = "your-image:latest"
+              imagePullPolicy = "Always"  # Force à toujours tirer l'image
+              // ... reste de la configuration ...
+            }
+          ]
+        }
+      }
+    }
+  }
 }
 
 resource "kubernetes_manifest" "workout-planner_service" {
@@ -31,7 +82,30 @@ resource "kubernetes_manifest" "workout-planner_service" {
 
 # MongoDB
 resource "kubernetes_manifest" "mongodb_deployment" {
-  manifest = yamldecode(file("${path.module}/k8s/mongodb-deployment.yml"))
+  manifest = {
+    apiVersion = "apps/v1"
+    kind       = "Deployment"
+    metadata = {
+      name      = "mongodb"
+      namespace = "default"
+      annotations = {
+        "timestamp" = local.timestamp  # Force le redéploiement
+      }
+    }
+    spec = {
+      template = {
+        spec = {
+          containers = [
+            {
+              image = "your-image:latest"
+              imagePullPolicy = "Always"  # Force à toujours tirer l'image
+              // ... reste de la configuration ...
+            }
+          ]
+        }
+      }
+    }
+  }
 }
 
 resource "kubernetes_manifest" "mongodb_service" {
