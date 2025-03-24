@@ -1,56 +1,25 @@
-name: "Terraform CI/CD"
+name: 🚀 Deploy Kubernetes via Terraform
 
 on:
-  repository_dispatch:
-    types: [trigger-deployment]
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
 
 jobs:
-  terraform:
-    name: "Terraform"
+  deploy-terraform:
     runs-on: self-hosted
-    
+
     steps:
-      - name: Checkout
+      - name: Checkout du dépôt
         uses: actions/checkout@v4
 
-      - name: Setup Terraform
+      - name: Installer Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.7.0
+          terraform_version: "1.7.4"
 
-      - name: Update API Version
-        if: github.event_name == 'repository_dispatch'
+      - name: Déployer avec Terraform
+        working-directory: terraform
         run: |
-          sed -i "s/api_version = \".*\"/api_version = \"${{ github.event.client_payload.version }}\"/" terraform.tfvars
-
-      - name: Terraform Format
-        id: fmt
-        run: terraform fmt -check
-        continue-on-error: true
-
-      - name: Terraform Init
-        id: init
-        run: terraform init
-
-      - name: Terraform Validate
-        id: validate
-        run: terraform validate
-
-      - name: Terraform Plan
-        id: plan
-        run: terraform plan -no-color
-        continue-on-error: true
-
-      - name: Terraform Plan Status
-        if: steps.plan.outcome == 'failure'
-        run: exit 1
-
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'repository_dispatch')
-        run: terraform apply -auto-approve
+          terraform init
+          terraform apply -auto-approve
