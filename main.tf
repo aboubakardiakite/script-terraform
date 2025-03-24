@@ -35,7 +35,7 @@ resource "kubernetes_manifest" "workout-planner" {
 }
 
 resource "kubernetes_manifest" "workout-planner_service" {
-  manifest = yamldecode(file("${path.module}/k8s/workout-planner-service.yml"))
+  manifest = yamldecode(file("${path.module}/k8s/workout-planner.service.yml"))
   lifecycle {
     ignore_changes = all
   }
