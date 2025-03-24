@@ -9,6 +9,9 @@ jobs:
   deploy-terraform:
     runs-on: self-hosted
 
+    env:
+      NODE_TLS_REJECT_UNAUTHORIZED: "0"  # Ajoute ceci !
+
     steps:
       - name: Checkout du dépôt
         uses: actions/checkout@v4
