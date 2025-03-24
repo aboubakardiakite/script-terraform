@@ -26,13 +26,3 @@ jobs:
         run: |
           terraform init
           terraform apply -auto-approve
-
-      - name: Restart deployments
-        run: |
-          kubectl rollout restart deployment/react-app
-          kubectl rollout restart deployment/workout-planner
-
-      - name: Wait for rollout to complete
-        run: |
-          kubectl rollout status deployment/react-app
-          kubectl rollout status deployment/workout-planner
