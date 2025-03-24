@@ -1,6 +1,0 @@
-namespace             = "planning-gyms-dev"
-mongodb_root_username = "admin"
-mongodb_root_password = "password123"
-docker_registry      = "aboubakar940"
-api_image           = "workout-planner"
-api_version         = "latest" 

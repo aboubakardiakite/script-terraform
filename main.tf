@@ -2,27 +2,38 @@ terraform {
   required_providers {
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = "~> 2.25.0"
+      version = "~> 2.0"
     }
-  }
-  
-  backend "local" {
-    path = "terraform.tfstate"
   }
 }
 
-# Configuration du provider Kubernetes
 provider "kubernetes" {
   config_path = "~/.kube/config"
 }
 
-module "kubernetes" {
-  source = "./modules/kubernetes"
+# React Frontend
+resource "kubernetes_manifest" "react_deployment" {
+  manifest = yamldecode(file("${path.module}/k8s/react-deployment.yml"))
+}
 
-  namespace             = var.namespace
-  mongodb_root_username = var.mongodb_root_username
-  mongodb_root_password = var.mongodb_root_password
-  docker_registry      = var.docker_registry
-  api_image           = var.api_image
-  api_version         = var.api_version
-} 
+resource "kubernetes_manifest" "react_service" {
+  manifest = yamldecode(file("${path.module}/k8s/react-service.yml"))
+}
+
+# NestJS Backend API
+resource "kubernetes_manifest" "workout-planner" {
+  manifest = yamldecode(file("${path.module}/k8s/workout-planner.yml"))
+}
+
+resource "kubernetes_manifest" "workout-planner_service" {
+  manifest = yamldecode(file("${path.module}/k8s/workout-planner.service.yml"))
+}
+
+# MongoDB
+resource "kubernetes_manifest" "mongodb_deployment" {
+  manifest = yamldecode(file("${path.module}/k8s/mongodb-deployment.yml"))
+}
+
+resource "kubernetes_manifest" "mongodb_service" {
+  manifest = yamldecode(file("${path.module}/k8s/mongodb-service.yml"))
+}
